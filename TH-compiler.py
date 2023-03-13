@@ -121,6 +121,7 @@ for i, file in enumerate(svg_files):
     # Insert the SVG image at the end of the document
     range_obj = doc.Range(doc.Content.End - 1, doc.Content.End)
     shape = doc.InlineShapes.AddPicture(FileName=filepath, Range=range_obj, LinkToFile=False, SaveWithDocument=True)
+    range_obj.InsertAfter(f"\n")
     shape.Width = 451
     shape.Height = 204 #
 
