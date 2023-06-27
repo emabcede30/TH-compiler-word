@@ -140,19 +140,29 @@ for i, file in enumerate(svg_files):
     else:
         shape.Range.InsertAfter("\n")
     
-print('\nUnlinking all secitons...')
-# Unlink each section from the previous
-for n, section in enumerate(doc.Sections):
-    header = section.Headers(win32.constants.wdHeaderFooterPrimary)
-    header.LinkToPrevious = False
- 
-    print(repr(section) + ' Unlinked ' + str(n))
-
-#temporary code to unlink section 2
-section = doc.Sections(2)
-header = section.Headers(win32.constants.wdHeaderFooterPrimary)
-header.LinkToPrevious = False
-print('\nAll sections unlinked.')
+def unlink_all_headers(doc):
+    print('\nUnlinking all sections...')
+    #n = 0
+    for n, section in enumerate(doc.Sections):
+        if section.Headers(win32.constants.wdHeaderFooterPrimary).LinkToPrevious:
+            section.Headers(win32.constants.wdHeaderFooterPrimary).LinkToPrevious = False
+#             n = n + 1
+            print(repr(section) + ' Unlinked section ' + str(n))
+    print('I\'m sure I unlinked it all...')
+    
+recheck_count = 0
+while recheck_count < 10:
+    unlink_all_headers(doc)
+    flag = False
+    for n, section in enumerate(doc.Sections):
+        if section.Headers(win32.constants.wdHeaderFooterPrimary).LinkToPrevious:
+            print('\nOops I forgot to unlink\n'+ print(repr(section) + ' Section ' + str(n+1)) + '. I will unlink again.')
+            flag = True
+            break
+    if not flag:
+        print('Now I\'m  really sure I unlinked it all...')
+        break
+    count += 1
 
 print('\nGenerating section header text...')
 # Collect section headers
