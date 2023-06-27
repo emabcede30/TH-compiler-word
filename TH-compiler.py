@@ -162,7 +162,7 @@ while recheck_count < 10:
     if not flag:
         print('Now I\'m  really sure I unlinked it all...')
         break
-    count += 1
+    recheck_count += 1
 
 print('\nGenerating section header text...')
 # Collect section headers
