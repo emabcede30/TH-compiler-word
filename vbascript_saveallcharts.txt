@@ -1,0 +1,31 @@
+Sub ExportAllCharts()
+    Dim objShell As Object
+    Dim objWindowsFolder As Object
+    Dim strWindowsFolder As String
+    Dim objSheet As Excel.Worksheet
+    Dim objChartObject As Excel.ChartObject
+    Dim objChart As Excel.Chart
+
+    'Select a Windows folder
+    Set objShell = CreateObject("Shell.Application")
+    Set objWindowsFolder = objShell.BrowseForFolder(0, "Select a Windows folder:", 0, "")
+
+    If Not objWindowsFolder Is Nothing Then
+       strWindowsFolder = objWindowsFolder.self.Path & "\"
+
+       For i = ThisWorkbook.Worksheets.Count To 1 Step -1
+           Set objSheet = ThisWorkbook.Worksheets(i)
+
+           If objSheet.ChartObjects.Count > 0 Then
+              For Each objChartObject In objSheet.ChartObjects
+                  Set objChart = objChartObject.Chart
+                  objChart.Export strWindowsFolder & objChart.Name & ".svg"
+              Next
+          End If
+       Next
+
+       'Open the windows folder
+       Shell "Explorer.exe" & " " & strWindowsFolder, vbNormalFocus
+   End If
+End Sub
+
