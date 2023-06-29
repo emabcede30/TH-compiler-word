@@ -141,8 +141,12 @@ for i, file in enumerate(svg_files):
         shape.Range.InsertAfter("\n")
     
 def unlink_all_headers(doc):
+    '''
+    I need to fix this. It doesn't unlink every section all the time. 2023.06.29.
+    '''
     print('\nUnlinking all sections...')
-    #n = 0
+    n = 0
+    section = ""
     for n, section in enumerate(doc.Sections):
         if section.Headers(win32.constants.wdHeaderFooterPrimary).LinkToPrevious:
             section.Headers(win32.constants.wdHeaderFooterPrimary).LinkToPrevious = False
@@ -154,15 +158,16 @@ recheck_count = 0
 while recheck_count < 10:
     unlink_all_headers(doc)
     flag = False
-    for n, section in enumerate(doc.Sections):
+    for section in doc.Sections:
         if section.Headers(win32.constants.wdHeaderFooterPrimary).LinkToPrevious:
-            print('\nOops I forgot to unlink\n'+ print(repr(section) + ' Section ' + str(n+1)) + '. I will unlink again.')
+            #print('\nOops I forgot to unlink\n'+ print(repr(section) + ' Section. I will unlink again.')
             flag = True
             break
     if not flag:
         print('Now I\'m  really sure I unlinked it all...')
         break
     recheck_count += 1
+    print('recheck_count_unlink:' + str(recheck_count))
 
 print('\nGenerating section header text...')
 # Collect section headers
